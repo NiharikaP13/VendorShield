@@ -83,10 +83,7 @@ Passwords are stored as salted PBKDF2-SHA256 hashes. Sessions are persisted in t
 
 Demo account:
 
-```text
-Username: auditor1
-Password: demo-password
-```
+Demo account credentials are provided separately for demonstration purposes.
 
 Registered users sign in with their email address or generated username.
 
@@ -199,6 +196,3 @@ This academic application implements password hashing, session expiry, protected
 - Verified supplier master-data relationships for an interactive network graph.
 - Controlled model retraining and model-governance workflow.
 
-## Contributors
-
-Add the project team members and faculty mentor here before submission.
