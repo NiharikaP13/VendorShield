@@ -1,0 +1,34 @@
+{
+  "_note": "Reconstructed by Person 4 from vendorshield_model_spec.json. Person 3's vendorshield_predict.py imports this file but it was not included in the Part 3 handoff zip. Values below are taken directly from the spec's decision_threshold/risk_bands and input_fields, so they are authoritative, not guessed. If Person 3 provided a real metrics_summary.json later, replace this file with theirs.",
+  "risk_bands": {
+    "high": 0.3098,
+    "medium": 0.1549
+  },
+  "feature_columns": [
+    "vendor_category",
+    "region",
+    "category_product",
+    "unit_of_measure",
+    "payment_method",
+    "standard_unit_price",
+    "quantity",
+    "unit_price",
+    "purchase_amount",
+    "invoice_amount",
+    "payment_amount",
+    "days_to_pay",
+    "vendor_tenure_days_at_purchase",
+    "vendor_historical_avg_price",
+    "price_deviation_ratio",
+    "days_purchase_to_invoice",
+    "days_invoice_to_payment",
+    "days_purchase_to_payment",
+    "invoice_purchase_pct_diff",
+    "is_suspected_shell_vendor",
+    "purchase_before_vendor_registration",
+    "is_round_invoice",
+    "invoice_amount_round_1000",
+    "invoice_amount_round_5000",
+    "is_rushed_payment"
+  ]
+}

@@ -1,0 +1,52 @@
+[
+  {
+    "row_index": 46092,
+    "fraud_probability": 0.9999,
+    "risk_level": "High",
+    "top_reasons": [
+      "invoice amount is a suspiciously round number",
+      "invoice amount lands exactly on a \u20b91,000 boundary",
+      "invoice amount lands exactly on a \u20b95,000 boundary"
+    ]
+  },
+  {
+    "row_index": 26142,
+    "fraud_probability": 1.0,
+    "risk_level": "High",
+    "top_reasons": [
+      "invoice amount differs from purchase amount by -0.2%",
+      "payment settled within 0 days of invoicing (unusually fast)",
+      "unit price of \u20b93,450.35 is unusually high"
+    ]
+  },
+  {
+    "row_index": 39226,
+    "fraud_probability": 0.969,
+    "risk_level": "High",
+    "top_reasons": [
+      "payment settled within 1 days of invoicing (unusually fast)",
+      "standard catalog price is \u20b971.61",
+      "only 1 days between invoice and payment"
+    ]
+  },
+  {
+    "row_index": 5113,
+    "fraud_probability": 0.976,
+    "risk_level": "High",
+    "top_reasons": [
+      "standard catalog price is \u20b9149.72",
+      "unit price of \u20b9354.27 is unusually high",
+      "quantity of 18 units"
+    ]
+  },
+  {
+    "row_index": 25821,
+    "fraud_probability": 0.9997,
+    "risk_level": "High",
+    "top_reasons": [
+      "invoice amount is a suspiciously round number",
+      "invoice amount lands exactly on a \u20b91,000 boundary",
+      "invoice amount lands exactly on a \u20b95,000 boundary"
+    ]
+  }
+]

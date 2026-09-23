@@ -1,0 +1,26 @@
+{
+  "project_name": "VendorShield",
+  "version": "4.0.0",
+  "build_date": "2026-08-02",
+  "application_type": "Web-based procurement risk decision-support platform",
+  "source_dataset_rows": 300000,
+  "dashboard_historical_rows": 60000,
+  "dashboard_data_scope": "Reconstructed held-out 20% stratified historical portfolio",
+  "vendor_count": 3200,
+  "product_count": 220,
+  "model": "XGBoost classifier with plain-language local explanations",
+  "database": "SQLite",
+  "high_risk_threshold": 0.3098,
+  "medium_risk_threshold": 0.1549,
+  "default_dashboard_url": "http://127.0.0.1:8501",
+  "default_api_url": "http://127.0.0.1:8000",
+  "end_user_role": "Procurement Auditor",
+  "frontend_pages": [
+    "Command Center",
+    "Transaction Review",
+    "Supplier Intelligence",
+    "New Transaction Assessment"
+  ],
+  "new_assessment_persistence": true,
+  "screenshot_capture_tool": true
+}

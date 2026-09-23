@@ -1,0 +1,16 @@
+feature,mean_abs_shap
+num__standard_unit_price,3.3570693
+num__unit_price,2.8300898
+num__days_to_pay,1.0985738
+num__invoice_purchase_pct_diff,1.0632547
+num__price_deviation_ratio,0.7616205
+bool__is_round_invoice,0.673947
+num__vendor_historical_avg_price,0.3101301
+num__quantity,0.30744818
+num__days_invoice_to_payment,0.21571997
+num__purchase_amount,0.209301
+num__invoice_amount,0.2025933
+bool__invoice_amount_round_1000,0.15345232
+num__days_purchase_to_payment,0.12989636
+num__vendor_tenure_days_at_purchase,0.07603335
+cat__payment_method_Bank Transfer,0.049000926

@@ -1,0 +1,82 @@
+{
+  "model_file": "vendorshield_model_v1.joblib",
+  "model_type": "XGBoost classifier (sklearn Pipeline: ColumnTransformer preprocessing -> XGBClassifier)",
+  "load_instructions": "import joblib; pipe = joblib.load('vendorshield_model_v1.joblib'); proba = pipe.predict_proba(df)[:, 1]  # df must be a pandas DataFrame with exactly the input_fields below, in any column order",
+  "decision_threshold": 0.3098,
+  "risk_bands": {
+    "High": ">= 0.3098",
+    "Medium": ">= 0.1549 and < 0.3098",
+    "Low": "< 0.1549"
+  },
+  "input_fields": [
+    {"name": "vendor_category", "type": "string", "required": true, "example": "Electrical Components", "notes": "one of 12 categories; unseen categories are handled gracefully (encoded as all-zero)"},
+    {"name": "region", "type": "string", "required": true, "example": "Delhi NCR"},
+    {"name": "category_product", "type": "string", "required": true, "example": "Electrical Components"},
+    {"name": "unit_of_measure", "type": "string", "required": true, "example": "unit", "notes": "one of: pallet, kg, meter, unit, carton, litre, roll, box"},
+    {"name": "payment_method", "type": "string", "required": true, "example": "UPI", "notes": "one of: RTGS, Bank Transfer, Cheque, NEFT, UPI"},
+    {"name": "standard_unit_price", "type": "float", "required": true, "example": 500.0, "notes": "catalog price for the product"},
+    {"name": "quantity", "type": "int", "required": true, "example": 10},
+    {"name": "unit_price", "type": "float", "required": true, "example": 1400.0, "notes": "actual price paid per unit on this purchase"},
+    {"name": "purchase_amount", "type": "float", "required": true, "example": 14000.0},
+    {"name": "invoice_amount", "type": "float", "required": true, "example": 15000.0},
+    {"name": "payment_amount", "type": "float", "required": true, "example": 15000.0},
+    {"name": "days_to_pay", "type": "int", "required": true, "example": 0, "notes": "days from invoice_date to payment_date"},
+    {"name": "vendor_tenure_days_at_purchase", "type": "int", "required": true, "example": 400, "notes": "purchase_date minus vendor registration_date, in days"},
+    {"name": "vendor_historical_avg_price", "type": "float", "required": true, "example": 520.0, "notes": "leave-one-out average of this vendor's unit_price for this product across other purchases"},
+    {"name": "price_deviation_ratio", "type": "float", "required": true, "example": 2.7, "notes": "unit_price / vendor_historical_avg_price, winsorized at the 99th percentile (cap ~28.19) before scoring"},
+    {"name": "days_purchase_to_invoice", "type": "int", "required": true, "example": 1},
+    {"name": "days_invoice_to_payment", "type": "int", "required": true, "example": 0},
+    {"name": "days_purchase_to_payment", "type": "int", "required": true, "example": 1},
+    {"name": "invoice_purchase_pct_diff", "type": "float", "required": true, "example": 7.1, "notes": "(invoice_amount - purchase_amount) / purchase_amount * 100"},
+    {"name": "is_suspected_shell_vendor", "type": "int (0 or 1)", "required": true, "example": 0, "notes": "1 if vendor shares bank_account_number or tax_id with another vendor_id"},
+    {"name": "purchase_before_vendor_registration", "type": "int (0 or 1)", "required": true, "example": 0},
+    {"name": "is_round_invoice", "type": "int (0 or 1)", "required": true, "example": 1, "notes": "1 if invoice_amount lands exactly on a 1000 or 5000 boundary"},
+    {"name": "invoice_amount_round_1000", "type": "int (0 or 1)", "required": true, "example": 1},
+    {"name": "invoice_amount_round_5000", "type": "int (0 or 1)", "required": true, "example": 0},
+    {"name": "is_rushed_payment", "type": "int (0 or 1)", "required": true, "example": 1, "notes": "1 if days_invoice_to_payment <= 1"}
+  ],
+  "fields_intentionally_excluded": [
+    "purchase_id", "vendor_id", "vendor_name", "product_id", "product_name",
+    "requested_by", "approved_by", "invoice_id", "invoice_number", "payment_id",
+    "purchase_date", "invoice_date", "payment_date", "registration_date",
+    "shell_cluster_id", "fraud_reason", "fraud_label"
+  ],
+  "exclusion_reasons": {
+    "fraud_label": "prediction target, not a feature",
+    "fraud_reason": "ground-truth explanation of the label; using it would leak the answer",
+    "shell_cluster_id": "ground-truth shell-ring ID, not available/knowable at real scoring time; use is_suspected_shell_vendor instead",
+    "identifiers (purchase_id, vendor_id, etc.)": "high-cardinality IDs with no generalizable signal; safe to pass through as metadata but keep out of the model input dict",
+    "raw dates": "superseded by the pre-computed day-count features (days_to_pay, days_purchase_to_invoice, etc.); pass dates upstream and compute the day-counts before calling the model"
+  },
+  "output_schema": {
+    "fraud_probability": "float, 0.0-1.0, model's raw predicted probability of fraud",
+    "risk_level": "string, one of 'High' | 'Medium' | 'Low', derived by thresholding fraud_probability against risk_bands above",
+    "top_reasons": "list of strings (up to 3), plain-language SHAP-derived explanations of the top features pushing this transaction's score toward fraud, ordered by contribution size"
+  },
+  "example_call": {
+    "python": "from vendorshield_predict import predict_fraud; predict_fraud(transaction_dict)",
+    "example_input": {
+      "vendor_category": "Electrical Components", "region": "Delhi NCR",
+      "category_product": "Electrical Components", "unit_of_measure": "unit",
+      "payment_method": "UPI", "standard_unit_price": 500.0, "quantity": 10,
+      "unit_price": 1400.0, "purchase_amount": 14000.0, "invoice_amount": 15000.0,
+      "payment_amount": 15000.0, "days_to_pay": 0,
+      "vendor_tenure_days_at_purchase": 400, "vendor_historical_avg_price": 520.0,
+      "price_deviation_ratio": 2.7, "days_purchase_to_invoice": 1,
+      "days_invoice_to_payment": 0, "days_purchase_to_payment": 1,
+      "invoice_purchase_pct_diff": 7.1, "is_suspected_shell_vendor": 0,
+      "purchase_before_vendor_registration": 0, "is_round_invoice": 1,
+      "invoice_amount_round_1000": 1, "invoice_amount_round_5000": 0,
+      "is_rushed_payment": 1
+    },
+    "example_output": {
+      "fraud_probability": 1.0,
+      "risk_level": "High",
+      "top_reasons": [
+        "invoice amount differs from purchase amount by 7.1%",
+        "invoice amount is a suspiciously round number",
+        "unit price of ₹1,400.00 is unusually high"
+      ]
+    }
+  }
+}
